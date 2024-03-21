@@ -2,7 +2,6 @@ import { StyleSheet, View, StatusBar } from 'react-native';
 import WebView from 'react-native-webview';
 import { Buffer } from 'buffer';
 
-import React from 'react';
 import {
   createContext,
   PropsWithChildren,
@@ -61,10 +60,12 @@ export function KkiapayProvider({ children }: PropsWithChildren<any>) {
   const defaultEvent = useRef<DefaultEventListener>(() => {});
 
   function registerCallback<T>(name: ListenerEventName, cb: T) {
-    setCallbacks((callbacks) => ({ ...callbacks, [name]: cb }));
+    setCallbacks(() => ({ ...callbacks, [name]: cb }));
   }
 
   const openKkiapayWidget = (config: IData) => {
+    console.log(`Open kkiapay widget`);
+
     let finalUri =
       WIDGET_URI +
       Buffer.from(JSON.stringify(config), 'utf-8').toString('base64');
@@ -165,6 +166,10 @@ export function KkiapayProvider({ children }: PropsWithChildren<any>) {
     }
   };
 
+  const INJECTED_JAVASCRIPT = `(function() {
+    window.ReactNativeWebView.postMessage(JSON.stringify(window.location));
+})();`;
+
   return (
     <KkiapayContext.Provider
       value={{
@@ -190,8 +195,8 @@ export function KkiapayProvider({ children }: PropsWithChildren<any>) {
         <WebView
           style={{ ...styles.container, marginTop: StatusBar.currentHeight }}
           source={{ uri }}
+          injectedJavaScript={INJECTED_JAVASCRIPT}
           onMessage={handleMessage}
-          javaScriptCanOpenWindowsAutomatically={true}
         />
       )}
       {!widgetOpened && <View style={styles.container}>{children}</View>}
