@@ -69,7 +69,7 @@ export function KkiapayProvider({ children }: PropsWithChildren<any>) {
     );
     setTimeout(() => {
       isWidgetOpened(true);
-    }, 0);
+    }, 100);
   };
 
   const closeKkiapayWidget = () => {
