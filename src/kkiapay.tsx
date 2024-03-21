@@ -1,6 +1,8 @@
 import { StyleSheet, View, StatusBar } from 'react-native';
 import WebView from 'react-native-webview';
 import { Buffer } from 'buffer';
+
+import React from 'react';
 import {
   createContext,
   PropsWithChildren,
@@ -63,13 +65,14 @@ export function KkiapayProvider({ children }: PropsWithChildren<any>) {
   }
 
   const openKkiapayWidget = (config: IData) => {
-    setUri(
+    let finalUri =
       WIDGET_URI +
-        Buffer.from(JSON.stringify(config), 'utf-8').toString('base64')
-    );
+      Buffer.from(JSON.stringify(config), 'utf-8').toString('base64');
+    setUri(finalUri);
+    console.log(`Final URI: ${finalUri}`);
     setTimeout(() => {
       isWidgetOpened(true);
-    }, 100);
+    }, 0);
   };
 
   const closeKkiapayWidget = () => {
@@ -142,6 +145,7 @@ export function KkiapayProvider({ children }: PropsWithChildren<any>) {
   };
 
   const handleMessage = (message: any) => {
+    console.log(`Message: ${message}`);
     if (message && message.nativeEvent && message.nativeEvent.data) {
       const response = JSON.parse(message.nativeEvent.data);
       const event = response.name as ListenerEventName;
@@ -187,6 +191,7 @@ export function KkiapayProvider({ children }: PropsWithChildren<any>) {
           style={{ ...styles.container, marginTop: StatusBar.currentHeight }}
           source={{ uri }}
           onMessage={handleMessage}
+          javaScriptCanOpenWindowsAutomatically={true}
         />
       )}
       {!widgetOpened && <View style={styles.container}>{children}</View>}
