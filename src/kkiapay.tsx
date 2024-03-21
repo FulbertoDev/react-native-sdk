@@ -186,17 +186,15 @@ export function KkiapayProvider({ children }: PropsWithChildren<any>) {
         addEventListener,
       }}
     >
-      if(widgetOpened)
-      {
+      {widgetOpened && (
         <WebView
           style={{ ...styles.container, marginTop: StatusBar.currentHeight }}
           source={{ uri }}
           onMessage={handleMessage}
           javaScriptCanOpenWindowsAutomatically={true}
         />
-      }
-      else{}
-      {widgetOpened && <View style={styles.container}>{children}</View>}
+      )}
+      {!widgetOpened && <View style={styles.container}>{children}</View>}
     </KkiapayContext.Provider>
   );
 }
