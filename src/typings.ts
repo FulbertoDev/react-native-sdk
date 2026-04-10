@@ -26,6 +26,7 @@ export interface IData {
   split?: string;
   partnerId?: string;
   reason: string;
+  verbose?: boolean;
 }
 export interface ListenerData {
   transactionId: string;

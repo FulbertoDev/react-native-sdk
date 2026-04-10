@@ -11,7 +11,7 @@ import { WAVE_LINK } from './typings';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import React from 'react';
 
-console.log(React);
+//console.log(React);
 
 import {
   createContext,
@@ -76,10 +76,17 @@ export function KkiapayProvider({ children }: PropsWithChildren<any>) {
   }
 
   const openKkiapayWidget = (config: IData) => {
-    setUri(
+    if (config.verbose) {
+      console.info('config', config);
+    }
+
+    let finalUri =
       WIDGET_URI +
-        Buffer.from(JSON.stringify(config), 'utf-8').toString('base64')
-    );
+      Buffer.from(JSON.stringify(config), 'utf-8').toString('base64');
+    if (config.verbose) {
+      console.info('WIDGET_URI', finalUri);
+    }
+    setUri(uri);
     setTimeout(() => {
       isWidgetOpened(true);
     }, 0);
@@ -157,6 +164,7 @@ export function KkiapayProvider({ children }: PropsWithChildren<any>) {
   const handleMessage = (message: any) => {
     if (message && message.nativeEvent && message.nativeEvent.data) {
       const response = JSON.parse(message.nativeEvent.data);
+
       if (response.name === WAVE_LINK && response.data) {
         launchWave(response.data);
         return;
