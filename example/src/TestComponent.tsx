@@ -1,6 +1,7 @@
-import { Button, View } from 'react-native';
+import { Button } from 'react-native';
 import { useKkiapay } from 'src/kkiapay';
 import React from 'react';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function TestComponent() {
   const { openKkiapayWidget } = useKkiapay();
@@ -9,14 +10,23 @@ export default function TestComponent() {
     openKkiapayWidget({
       amount: 100,
       key: 'your_api_key',
-      sandbox: false,
+      sandbox: true,
       reason: 'Payment',
+      verbose: true,
     });
   };
 
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+    <SafeAreaView style={styles.webview}>
       <Button title="Pay now" onPress={openWidget} />
-    </View>
+    </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  webview: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});
